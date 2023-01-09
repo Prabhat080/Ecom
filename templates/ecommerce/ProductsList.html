@@ -1,0 +1,38 @@
+{%extends 'ecommerce/home.html'%}
+{%load static%}
+{%block productsList%}
+<script type="text/javascript">
+    var user = "{{request.user}}"
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrfToken = getCookie('csrftoken');
+</script>
+{%for Product in productDictionary %}
+<h1>{{Product.name}}</h1>
+<a href="{%url 'test' Product.id %}"><img src="{{Product.image.url}}" /></a>
+<h1>{{Product.price}}</h1>
+{%if Product.available is -1%}
+<button>Unaivalable for now</button>
+{%else%}
+<button 
+data-product="{{Product.id}}"
+data-action="add"
+class="updCart"
+>Add to Cart</button>
+{%endif%}
+{%endfor%}
+<script src="{% static 'js/cart.js'%}"></script>
+{% endblock %}

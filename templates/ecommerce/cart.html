@@ -1,0 +1,50 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <script type="text/javascript">
+        var user = "{{request.user}}"
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrfToken = getCookie('csrftoken');
+    </script>
+    <h1>Welcome to Cart</h1>
+    {%for cart in carts%}
+    <div id = "div{{cart.product.id}}">
+    <h1>{{cart.product.name}}</h1>
+    <img src="{{cart.product.image.url}}" alt=""/>
+    <h1 class="{{cart.product.id}}">{{cart.quantity}}</h1>
+    <button 
+    data-product="{{cart.product.id}}"
+    data-action="add"
+    class="updCart"
+    >+</button>
+    <button 
+    data-product="{{cart.product.id}}"
+    data-action="del"
+    class="updCart">-</button>
+    </div>
+    {%endfor%} 
+    {%if carts|length is not 0 and request.user.is_authenticated %}
+    <button class="checkout">Checkout
+    </button>
+    {%endif%}
+    
+    <script src="{% static 'js/dynamic.js'%}"></script>
+</body>
+</html>
